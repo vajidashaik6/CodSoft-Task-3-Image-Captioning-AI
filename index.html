@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VisionCaption AI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="background"></div>
+
+    <main class="container">
+
+        <header class="header">
+
+            <div class="logo">
+                <span>✦</span>
+                VisionCaption AI
+            </div>
+
+            <p>
+                Intelligent Image Captioning powered by AI
+            </p>
+
+        </header>
+
+
+        <section class="card">
+
+            <div class="hero">
+
+                <h1>Turn Images Into Words</h1>
+
+                <p>
+                    Upload an image and let artificial intelligence
+                    understand and describe its visual content.
+                </p>
+
+            </div>
+
+
+            <div class="upload-area" id="uploadArea">
+                
+
+                <div class="upload-icon">
+                    🖼️
+                </div>
+
+                <h2>Upload Your Image</h2>
+
+                <p>
+                    JPG, JPEG or PNG images are supported
+                </p>
+
+                <input
+    type="file"
+    id="imageInput"
+    accept="image/png, image/jpeg, image/jpg"
+    hidden
+>
+                <button
+                    class="upload-btn"
+                    onclick="document.getElementById('imageInput').click()"
+                >
+                    Choose Image
+                </button>
+                <p class="drop-text">
+    or drag & drop your image here
+</p>
+
+            </div>
+
+
+            <div class="preview-section" id="previewSection">
+
+                <img id="previewImage" alt="Image Preview">
+
+                <button
+                    class="generate-btn"
+                    id="generateBtn"
+                >
+                    ✨ Generate Caption
+                </button>
+
+            </div>
+
+
+            <div class="loading" id="loading">
+
+                <div class="spinner"></div>
+
+                <p>
+                    AI is analyzing your image...
+                </p>
+
+            </div>
+
+
+          <div class="result" id="result">
+
+    <div class="result-title">
+        ✨ AI Generated Caption
+    </div>
+
+    <p id="captionText"></p>
+
+    <button
+        class="another-btn"
+        id="anotherBtn"
+        onclick="resetApp()"
+    >
+        🔄 Generate Another Image
+    </button>
+
+</div>
+<div class="tech-info">
+
+    <div class="tech-item">
+        <span>🤖</span>
+        <strong>AI Model</strong>
+        <small>BLIP Image Captioning</small>
+    </div>
+
+    <div class="tech-item">
+        <span>🐍</span>
+        <strong>Backend</strong>
+        <small>Python + Flask</small>
+    </div>
+
+    <div class="tech-item">
+        <span>⚡</span>
+        <strong>Processing</strong>
+        <small>AI Vision Analysis</small>
+    </div>
+
+</div>
+
+        </section>
+
+
+        <footer>
+
+            <p>
+                Built with Python • Flask • Transformers • BLIP
+            </p>
+
+        </footer>
+
+    </main>
+
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>
