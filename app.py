@@ -1,26 +1,17 @@
 from flask import Flask, render_template, request, jsonify
-from transformers import BlipProcessor, BlipForConditionalGeneration
-from PIL import Image
+from huggingface_hub import InferenceClient
 import os
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = "uploads"
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+HF_TOKEN = os.environ.get("HF_TOKEN")
 
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
-print("Loading AI model...")
-
-processor = BlipProcessor.from_pretrained(
-    "Salesforce/blip-image-captioning-base"
+client = InferenceClient(
+    api_key=HF_TOKEN,
+    provider="auto"
 )
 
-model = BlipForConditionalGeneration.from_pretrained(
-    "Salesforce/blip-image-captioning-base"
-)
-
-print("AI model loaded successfully!")
+MODEL = "Salesforce/blip-image-captioning-base"
 
 
 @app.route("/")
@@ -39,33 +30,27 @@ def caption():
     if file.filename == "":
         return jsonify({"error": "No image selected"}), 400
 
-    image_path = os.path.join(
-        app.config["UPLOAD_FOLDER"],
-        file.filename
-    )
+    try:
+        image_bytes = file.read()
 
-    file.save(image_path)
+        result = client.image_to_text(
+            image_bytes,
+            model=MODEL
+        )
 
-    image = Image.open(image_path).convert("RGB")
+        caption_text = result.generated_text
 
-    inputs = processor(
-        images=image,
-        return_tensors="pt"
-    )
+        return jsonify({
+            "caption": caption_text
+        })
 
-    output = model.generate(
-        **inputs,
-        max_new_tokens=50
-    )
+    except Exception as e:
+        print("Caption error:", e)
 
-    caption_text = processor.decode(
-        output[0],
-        skip_special_tokens=True
-    )
+        return jsonify({
+            "error": "Unable to generate caption. Please try again."
+        }), 500
 
-    return jsonify({
-        "caption": caption_text
-    })
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
